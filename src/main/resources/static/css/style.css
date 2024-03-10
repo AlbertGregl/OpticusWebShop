@@ -1,8 +1,27 @@
+body {
+  background-color: #171717 !important;
+  color: white !important;
+}
+
+
 .icon-hover:hover {
-  border-color: #3b71ca !important;
-  background-color: white !important;
+  border-color: goldenrod !important;
+  background-color: #171717 !important;
 }
 
 .icon-hover:hover i {
-  color: #3b71ca !important;
+  color: gold !important;
+}
+
+.bg-theme-highlight {
+  background-color: goldenrod !important;
+}
+
+.bg-theme-info {
+  background-color: rebeccapurple !important;
+}
+
+.hidden-section
+{
+  display: none;
 }
