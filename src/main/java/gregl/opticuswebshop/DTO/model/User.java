@@ -3,12 +3,14 @@ package gregl.opticuswebshop.DTO.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.security.Timestamp;
+import java.util.Date;
 
 @Entity
 @Table(name = "users")
 @Data
 public class User {
+
+    private static final Date date = new Date(System.currentTimeMillis());
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +30,8 @@ public class User {
     private String email;
 
     @Column(nullable = false)
-    private Timestamp createdAt;
+    private Date createdAt = date;
 
     private String address;
+
 }

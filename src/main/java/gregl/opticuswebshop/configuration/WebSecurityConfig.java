@@ -4,6 +4,7 @@ import gregl.opticuswebshop.DTO.model.User;
 import gregl.opticuswebshop.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,6 +34,8 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/", "/js/**", "/css/**", "/img/**").permitAll()
+                        .requestMatchers("/register/**").permitAll()
+                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMINISTRATOR")
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
@@ -45,7 +48,7 @@ public class WebSecurityConfig {
                         .logoutSuccessUrl("/")
                         .permitAll()
                 )
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/perform_login", "/perform_logout"));
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/perform_login", "/perform_logout", "/register/**"));
         return http.build();
     }
 
@@ -74,4 +77,5 @@ public class WebSecurityConfig {
         authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
         return authorities;
     }
+
 }
