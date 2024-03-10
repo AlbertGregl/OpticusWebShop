@@ -45,22 +45,30 @@
                                 <p class="d-none d-md-block mb-0">Sign in</p>
                             </a>
                         </div>
-                        <div sec:authorize="isAuthenticated()"> <!-- sec:authorize="hasRole('ROLE_CUSTOMER')" -->
-                            <a href="#"
-                               class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center btn-primary"
-                               data-bs-toggle="modal"
-                               data-bs-target="#authModal">
-                                <img th:src="@{/img/user-alt-solid.svg}" src="/static/img/user-alt-solid.svg"
-                                     class="m-1 me-md-2" alt="" height="32">
-                                <p class="d-none d-md-block mb-0">Log out</p>
-                            </a>
+                        <div sec:authorize="isAuthenticated()">
+                            <form th:action="@{/logout}" method="post" id="logoutForm" style="cursor:pointer;" title="Log out">
+                                <button type="submit"
+                                        class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center btn-primary text-primary"
+                                        style="background: lightblue;">
+                                    <img th:src="@{/img/logout.svg}" src="/static/img/logout.svg"
+                                         class="m-1 me-md-2" alt="" height="32">
+                                </button>
+                            </form>
                         </div>
-                        <div sec:authorize="!isAuthenticated()">
+                        <div sec:authorize="isAnonymous() or hasAuthority('ROLE_CUSTOMER')">
                             <a href="#"
-                               class="border rounded py-1 px-3 nav-link d-flex align-items-center btn-primary">
+                               class="border rounded me-2 py-1 px-3 nav-link d-flex align-items-center btn-primary">
                                 <img th:src="@{/img/shopping-cart-solid.svg}" src="/static/img/shopping-cart-solid.svg"
                                      class="m-1 me-md-2" alt="" height="32">
                                 <p class="d-none d-md-block mb-0">My cart</p>
+                            </a>
+                        </div>
+                        <div sec:authorize="hasRole('ROLE_ADMINISTRATOR')">
+                            <a href="/admin.html" style="background: #6a1a21; color: #1A6A63; font-weight: bold;"
+                               class="border rounded py-1 px-3 nav-link d-flex align-items-center btn-danger">
+                                <img th:src="@{/img/admin.svg}" src="/static/img/admin.svg"
+                                     class="m-1 me-md-2" alt="" height="32">
+                                <p class="d-none d-md-block mb-0">Admin</p>
                             </a>
                         </div>
                     </div>
@@ -121,7 +129,6 @@
                             </form>
                         </div>
                         <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
-                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                             <form th:action="@{/register}" method="post" class="p-3">
                                 <div class="mb-3">
                                     <label for="registerUsername" class="form-label">Username</label>
@@ -179,8 +186,10 @@
                                onclick="showSection('categories')">Categories</a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-primary nav-link text-white" href="#profile"
-                               onclick="showSection('profile')">My Orders</a>
+                            <div sec:authorize="hasRole('ROLE_CUSTOMER')">
+                                <a class="btn btn-primary nav-link text-primary text-primary" style="font-weight: bold" href="#profile"
+                                   onclick="showSection('profile')">Profile</a>
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -257,7 +266,7 @@
 </section>
 
 <!-- Products SECTION -->
-<section id="prodGlasses" class="hidden-section"> <!-- class="hidden-section" -->
+<section id="prodGlasses" class="hidden-section">
     <div class="container my-5">
         <header class="mb-4">
             <h3>Glasses</h3>

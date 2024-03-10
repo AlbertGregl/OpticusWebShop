@@ -4,7 +4,6 @@ import gregl.opticuswebshop.DTO.model.User;
 import gregl.opticuswebshop.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,14 +32,14 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/", "/js/**", "/css/**", "/img/**").permitAll()
+                        .requestMatchers("/", "/js/**", "/css/**", "/img/**", "/perform_login").permitAll()
                         .requestMatchers("/register/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMINISTRATOR")
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
                         .loginProcessingUrl("/perform_login")
-                        .successForwardUrl("/")
+                        .defaultSuccessUrl("/", true)
                         .failureUrl("/?error=true")
                         .permitAll()
                 )
@@ -66,7 +65,7 @@ public class WebSecurityConfig {
             }
             return new org.springframework.security.core.userdetails.User(
                     user.getUsername(),
-                    passwordEncoder().encode(user.getPassword()),
+                    user.getPassword(),
                     getAuthorities(user)
             );
         };
