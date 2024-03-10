@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    <title>Admin panel</title>
+
+    <!-- CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link href="/static/css/mdb.min.css" rel="stylesheet" th:href="@{/css/mdb.min.css}"/>
+    <link href="/static/css/style.css" rel="stylesheet" th:href="@{/css/style.css}"/>
+
+    <!-- JS -->
+    <script src="/static/js/jquery-3.7.1.min.js" th:src="@{/js/jquery-3.7.1.min.js}"></script>
+    <script src="/static/js/bootstrap.bundle.min.js" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script src="/static/js/script.js" th:src="@{/js/script.js}"></script>
+
+    <!-- Favicon -->
+    <link href="/static/img/icon.png" rel="icon" th:href="@{/img/icon.png}">
+
+</head>
+<body>
+<!-- Admin Navbar -->
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container justify-content-center justify-content-md-between">
+            <!-- Toggle button -->
+            <a class="btn btn-primary navbar-toggler border py-2" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar" aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <img src="/static/img/bars-solid.svg" th:src="@{/img/bars-solid.svg}" height="32" alt="Toggle navigation">
+            </a>
+
+            <!-- Navbar content -->
+            <div class="collapse navbar-collapse" id="adminNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- Manage Categories -->
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="#manageCategories" onclick="showSection('manageCategories')">Manage Categories</a>
+                    </li>
+
+                    <!-- Manage Products -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#manageProducts" onclick="showSection('manageProducts')">Manage Products</a>
+                    </li>
+
+                    <!-- Login History -->
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#loginHistory" onclick="showSection('loginHistory')">Login History</a>
+                    </li>
+
+                    <!-- Purchase History -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#purchaseHistory" onclick="showSection('purchaseHistory')">Purchase History</a>
+                    </li>
+                </ul>
+                <div class="order-lg-last col-lg-5 col-sm-8 col-8">
+                    <div class="d-flex float-end">
+                        <form th:action="@{/logout}" method="post" id="logoutForm" style="cursor:pointer;" title="Log out">
+                            <button type="submit"
+                                    class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center btn-danger text-primary"
+                                    style="background: lightblue;">
+                                <img th:src="@{/img/logout.svg}" src="/static/img/logout.svg"
+                                     class="m-1 me-md-2" alt="" height="32">
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+
+<!-- Manage Categories -->
+<section id="manageCategories" class="hidden-section">
+    <div class="container">
+        <h2 class="mt-3">Manage Categories</h2>
+        <!-- Add Category Button -->
+        <div class="col">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">Add Category</button>
+            <!-- Add Category Modal -->
+            <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addCategoryModalLabel">Add Category</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form th:action="@{/admin/addCategory}" method="post">
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="categoryName" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="categoryName" name="name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="categoryDescription" class="form-label">Description</label>
+                                    <textarea class="form-control" id="categoryDescription" name="description"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Add Category</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Categories Table -->
+        <table class="table table-striped mt-3">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="category, iterStat : ${categories}">
+                <th scope="row" th:text="${iterStat.count}">1</th>
+                <td th:text="${category.name}">Name</td>
+                <td th:text="${category.description}">Description</td>
+                <td>
+                    <a th:href="@{/admin/editCategory/{id}(id=${category.categoryId})}" class="btn btn-success">Edit</a>
+                    <form th:action="@{/admin/deleteCategory/{id}(id=${category.categoryId})}" method="post" style="display:inline;">
+                        <input type="hidden" name="_method" value="delete" />
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
+<!-- Manage Products -->
+<section id="manageProducts" class="hidden-section">
+    <div class="container">
+        <h2 class="mt-3">Manage Products</h2>
+    </div>
+</section>
+
+<!-- Login History -->
+<section id="loginHistory">
+    <div class="container">
+        <h2 class="mt-3">Login History</h2>
+    </div>
+</section>
+
+<!-- Purchase History -->
+<section id="purchaseHistory" class="hidden-section">
+    <div class="container">
+        <h2 class="mt-3">Purchase History</h2>
+    </div>
+</section>
+
+</body>
+</html>

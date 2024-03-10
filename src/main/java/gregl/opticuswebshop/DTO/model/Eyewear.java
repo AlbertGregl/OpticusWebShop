@@ -20,6 +20,10 @@ public class Eyewear {
     @JoinColumn(name = "brand_id", nullable = false)
     private Brand brand;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
     @Column(nullable = false)
     private String name;
 
@@ -28,10 +32,6 @@ public class Eyewear {
 
     @Column(nullable = false)
     private Double price;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private EyewearType type;
 
     @Column(nullable = false)
     private Integer stockQuantity;
