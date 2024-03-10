@@ -6,10 +6,10 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {
-        "gregl.opticuswebshop.BL",
-    "gregl.opticuswebshop.DAL",
-    "gregl.opticuswebshop.algebralab",
-    "gregl.opticuswebshop.MVC",})
+        "gregl.opticuswebshop.controller",
+    "gregl.opticuswebshop.configuration",
+    "gregl.opticuswebshop.DTO",
+    "gregl.opticuswebshop.service",})
 public class OpticusWebShopApplication {
 
     public static void main(String[] args) {

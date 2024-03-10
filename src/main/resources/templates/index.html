@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
@@ -34,18 +35,34 @@
                 </div>
                 <div class="order-lg-last col-lg-5 col-sm-8 col-8">
                     <div class="d-flex float-end">
-                        <a href="#"
-                           class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center btn-primary">
-                            <img th:src="@{/img/user-alt-solid.svg}" src="/static/img/user-alt-solid.svg"
-                                 class="m-1 me-md-2" alt="" height="32">
-                            <p class="d-none d-md-block mb-0">Sign in</p>
-                        </a>
-                        <a href="#"
-                           class="border rounded py-1 px-3 nav-link d-flex align-items-center btn-primary">
-                            <img th:src="@{/img/shopping-cart-solid.svg}" src="/static/img/shopping-cart-solid.svg"
-                                 class="m-1 me-md-2" alt="" height="32">
-                            <p class="d-none d-md-block mb-0">My cart</p>
-                        </a>
+                        <div sec:authorize="!isAuthenticated()">
+                            <a href="#"
+                               class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center btn-primary"
+                               data-bs-toggle="modal"
+                               data-bs-target="#authModal">
+                                <img th:src="@{/img/user-alt-solid.svg}" src="/static/img/user-alt-solid.svg"
+                                     class="m-1 me-md-2" alt="" height="32">
+                                <p class="d-none d-md-block mb-0">Sign in</p>
+                            </a>
+                        </div>
+                        <div sec:authorize="isAuthenticated()">
+                            <a href="#"
+                               class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center btn-primary"
+                               data-bs-toggle="modal"
+                               data-bs-target="#authModal">
+                                <img th:src="@{/img/user-alt-solid.svg}" src="/static/img/user-alt-solid.svg"
+                                     class="m-1 me-md-2" alt="" height="32">
+                                <p class="d-none d-md-block mb-0">Log out</p>
+                            </a>
+                        </div>
+                        <div sec:authorize="!isAuthenticated()">
+                            <a href="#"
+                               class="border rounded py-1 px-3 nav-link d-flex align-items-center btn-primary">
+                                <img th:src="@{/img/shopping-cart-solid.svg}" src="/static/img/shopping-cart-solid.svg"
+                                     class="m-1 me-md-2" alt="" height="32">
+                                <p class="d-none d-md-block mb-0">My cart</p>
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-5 col-md-12 col-12">
@@ -55,7 +72,8 @@
                             <label class="form-label" for="form1">Search</label>
                         </div>
                         <button type="button" class="btn btn-primary shadow-0">
-                            <img src="/static/img/search-solid.svg" th:src="@{/img/search-solid.svg}" class="m-1 me-md-2" alt="">
+                            <img src="/static/img/search-solid.svg" th:src="@{/img/search-solid.svg}"
+                                 class="m-1 me-md-2" alt="">
                         </button>
                     </div>
                 </div>
@@ -63,7 +81,62 @@
         </div>
     </div>
 
-    <!-- Navbar -->
+    <!-- Modal -->
+    <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="authModalLabel">Login / Register</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" id="authTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login"
+                                    type="button" role="tab" aria-controls="login" aria-selected="true">Login
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register"
+                                    type="button" role="tab" aria-controls="register" aria-selected="false">Register
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
+                            <!-- Login Form -->
+                            <form action="#" th:action="@{/login}" method="post" class="p-3">
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="username" name="username" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Login</button>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
+                            <!-- Register Form -->
+                            <form action="#" th:action="@{/register}" method="post" class="p-3">
+                                <!-- Registration fields (e.g., username, email, password, etc.) -->
+                                <button type="submit" class="btn btn-primary">Register</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Navbar -->
     <header>
         <nav class="navbar navbar-expand-lg">
@@ -83,13 +156,16 @@
                 <div class="collapse navbar-collapse" id="navbarLeftAlignExample">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="btn btn-primary nav-link text-white" aria-current="page" href="#home" onclick="showSection('home')">Home</a>
+                            <a class="btn btn-primary nav-link text-white" aria-current="page" href="#home"
+                               onclick="showSection('home')">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-primary nav-link text-white" href="#categories" onclick="showSection('categories')">Categories</a>
+                            <a class="btn btn-primary nav-link text-white" href="#categories"
+                               onclick="showSection('categories')">Categories</a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-primary nav-link text-white" href="#profile" onclick="showSection('profile')">My Orders</a>
+                            <a class="btn btn-primary nav-link text-white" href="#profile"
+                               onclick="showSection('profile')">My Orders</a>
                         </li>
                     </ul>
                 </div>
@@ -109,21 +185,23 @@
                     <div class="col-3">
                         <a href="#prodGlasses" onclick="showSection('prodGlasses')"
                            class="btn btn-outline-primary text-center d-flex flex-column justify-content-center mx-auto p-3 mb-2 ">
-                                <img src="/static/img/glasses.svg" th:src="@{/img/glasses.svg}" height="64" alt="">
+                            <img src="/static/img/glasses.svg" th:src="@{/img/glasses.svg}" height="64" alt="">
                             <p class="pt-2">Glasses</p>
                         </a>
                     </div>
                     <div class="col-3">
                         <a href="#prodSunglasses" onclick="showSection('prodSunglasses')"
                            class="btn btn-outline-primary text-center d-flex flex-column justify-content-center mx-auto p-3 mb-2 ">
-                            <img src="/static/img/glasses-solid.svg" th:src="@{/img/glasses-solid.svg}" height="64" alt="">
+                            <img src="/static/img/glasses-solid.svg" th:src="@{/img/glasses-solid.svg}" height="64"
+                                 alt="">
                             <p class="pt-2 ">Sunglasses</p>
                         </a>
                     </div>
                     <div class="col-3">
                         <a href="#prodAccessories" onclick="showSection('prodAccessories')"
                            class="btn btn-outline-primary text-center d-flex flex-column justify-content-center mx-auto p-3 mb-2 ">
-                            <img src="/static/img/hat-wizard-solid.svg" th:src="@{/img/hat-wizard-solid.svg}" height="64" alt="">
+                            <img src="/static/img/hat-wizard-solid.svg" th:src="@{/img/hat-wizard-solid.svg}"
+                                 height="64" alt="">
                             <p class="pt-2">Accessories</p>
                         </a>
                     </div>
@@ -147,6 +225,7 @@
                         <p class="text-white">
                             The best glasses for your eyes. We have a wide range of sunglasses and optics for every day.
                         </p>
+                    </div>
                 </div>
             </main>
             <aside class="col-lg-3">
