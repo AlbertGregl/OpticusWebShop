@@ -206,27 +206,11 @@
         <nav class="row gy-4">
             <div class="col-lg-6 col-md-12">
                 <div class="row">
-                    <div class="col-3">
-                        <a href="#prodGlasses" onclick="showSection('prodGlasses')"
-                           class="btn btn-outline-primary text-center d-flex flex-column justify-content-center mx-auto p-3 mb-2 ">
-                            <img src="/static/img/glasses.svg" th:src="@{/img/glasses.svg}" height="64" alt="">
-                            <p class="pt-2">Glasses</p>
-                        </a>
-                    </div>
-                    <div class="col-3">
-                        <a href="#prodSunglasses" onclick="showSection('prodSunglasses')"
-                           class="btn btn-outline-primary text-center d-flex flex-column justify-content-center mx-auto p-3 mb-2 ">
-                            <img src="/static/img/glasses-solid.svg" th:src="@{/img/glasses-solid.svg}" height="64"
-                                 alt="">
-                            <p class="pt-2 ">Sunglasses</p>
-                        </a>
-                    </div>
-                    <div class="col-3">
-                        <a href="#prodAccessories" onclick="showSection('prodAccessories')"
-                           class="btn btn-outline-primary text-center d-flex flex-column justify-content-center mx-auto p-3 mb-2 ">
-                            <img src="/static/img/hat-wizard-solid.svg" th:src="@{/img/hat-wizard-solid.svg}"
-                                 height="64" alt="">
-                            <p class="pt-2">Accessories</p>
+                    <div th:each="category : ${categories}" class="col-3">
+                        <a href="javascript:void(0);" th:attr="data-category-id=${category.categoryId}" onclick="showCategoryProducts(this.getAttribute('data-category-id'))"
+                           class="btn btn-outline-primary text-center d-flex flex-column justify-content-center mx-auto p-3 mb-2">
+                            <img th:src="${category.imagePath}" src="/static/img/glasses.svg" height="64" alt="" th:alt="${category.name}">
+                            <p class="pt-2" th:text="${category.name}" style="font-weight: bolder">Category</p>
                         </a>
                     </div>
                 </div>
@@ -265,6 +249,10 @@
     </div>
 </section>
 
+
+<div>
+
+</div>
 <!-- Products SECTION -->
 <section id="prodGlasses" class="hidden-section">
     <div class="container my-5">

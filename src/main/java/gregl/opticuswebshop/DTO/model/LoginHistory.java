@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 public class LoginHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "log_id")
     private Integer logId;
 
     @ManyToOne(fetch = FetchType.LAZY)

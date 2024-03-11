@@ -14,24 +14,26 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Integer userId;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, name = "username")
     private String username;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "password")
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, name = "role")
     private Role role;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, name = "email")
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name= "created_at")
     private Date createdAt = date;
 
+    @Column(name = "address")
     private String address;
 
 }

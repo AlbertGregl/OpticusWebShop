@@ -9,11 +9,15 @@ import lombok.Data;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "category_id")
     private Integer categoryId;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, name = "name")
     private String name;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", name = "description")
     private String description;
+
+    @Column(name = "image_path")
+    private String imagePath;
 }

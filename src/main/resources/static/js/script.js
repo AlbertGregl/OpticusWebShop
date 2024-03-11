@@ -24,3 +24,20 @@ function showSection(sectionId) {
         }
     }
 }
+
+
+function showCategoryProducts(categoryId) {
+    // TODO: Show only the products for the selected category
+    console.log("Showing products for category:", categoryId);
+    const products = document.querySelectorAll('.product');
+    for (const product of products) {
+        console.log("Checking product:", product.id);
+        if (product.id === categoryId) {
+            console.log("Showing:", product.id);
+            product.style.display = 'block';
+        } else {
+            console.log("Hiding:", product.id);
+            product.style.display = 'none';
+        }
+    }
+}

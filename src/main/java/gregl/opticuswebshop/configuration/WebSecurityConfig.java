@@ -32,8 +32,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/", "/js/**", "/css/**", "/img/**", "/perform_login").permitAll()
-                        .requestMatchers("/register/**").permitAll()
+                        .requestMatchers("/", "/js/**", "/css/**", "/img/**", "/perform_login", "/register/**", "/uploads/img/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMINISTRATOR")
                         .anyRequest().authenticated()
                 )
@@ -47,7 +46,7 @@ public class WebSecurityConfig {
                         .logoutSuccessUrl("/")
                         .permitAll()
                 )
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/perform_login", "/perform_logout", "/register/**"));
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/perform_login", "/perform_logout", "/register/**", "/admin/**", "/uploads/img/**"));
         return http.build();
     }
 

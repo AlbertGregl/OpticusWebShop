@@ -10,6 +10,7 @@ public class Eyewear {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "eyewear_id")
     private Integer eyewearId;
 
     @ManyToOne
@@ -27,12 +28,15 @@ public class Eyewear {
     @Column(nullable = false)
     private String name;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", name = "description")
     private String description;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "price")
     private Double price;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "stock_quantity")
     private Integer stockQuantity;
+
+    @Column(name = "image_path")
+    private String imagePath;
 }
