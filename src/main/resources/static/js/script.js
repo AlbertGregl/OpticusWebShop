@@ -58,3 +58,33 @@ $(document).ready(function() {
     });
 });
 
+
+// edit eyewear modal helper
+$(document).ready(function() {
+    $('#editEyewearModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var eyewearId = button.attr('data-eyewear-id');
+        var eyewearName = button.attr('data-eyewear-name');
+        var manufacturerId = button.attr('data-eyewear-manufacturer-id');
+        var brandId = button.attr('data-eyewear-brand-id');
+        var categoryId = button.attr('data-eyewear-category-id');
+        var description = button.attr('data-eyewear-description');
+        var price = button.attr('data-eyewear-price');
+        var stockQuantity = button.attr('data-eyewear-stock-quantity');
+
+        var modal = $(this);
+        modal.find('#editEyewearId').val(eyewearId);
+        modal.find('#editManufacturerId').val(manufacturerId);
+        modal.find('#editEyewearName').val(eyewearName);
+        modal.find('#editEyewearManufacturer').val(manufacturerId);
+        modal.find('#editEyewearBrand').val(brandId);
+        modal.find('#editEyewearCategory').val(categoryId);
+        modal.find('#editEyewearDescription').val(description);
+        modal.find('#editEyewearPrice').val(price);
+        modal.find('#editEyewearStockQuantity').val(stockQuantity);
+    });
+});
+
+
+
+

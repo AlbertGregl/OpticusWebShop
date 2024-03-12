@@ -27,8 +27,11 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container justify-content-center justify-content-md-between">
             <!-- Toggle button -->
-            <a class="btn btn-primary navbar-toggler border py-2" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar" aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">
-                <img src="/static/img/bars-solid.svg" th:src="@{/img/bars-solid.svg}" height="32" alt="Toggle navigation">
+            <a class="btn btn-primary navbar-toggler border py-2" type="button" data-bs-toggle="collapse"
+               data-bs-target="#adminNavbar" aria-controls="adminNavbar" aria-expanded="false"
+               aria-label="Toggle navigation">
+                <img src="/static/img/bars-solid.svg" th:src="@{/img/bars-solid.svg}" height="32"
+                     alt="Toggle navigation">
             </a>
 
             <!-- Navbar content -->
@@ -36,27 +39,32 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <!-- Manage Categories -->
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="#manageCategories" onclick="showSection('manageCategories')">Manage Categories</a>
+                        <a class="nav-link" aria-current="page" href="#manageCategories"
+                           onclick="showSection('manageCategories')">Manage Categories</a>
                     </li>
 
                     <!-- Manage Products -->
                     <li class="nav-item">
-                        <a class="nav-link" href="#manageProducts" onclick="showSection('manageProducts')">Manage Products</a>
+                        <a class="nav-link" href="#manageEyewear" onclick="showSection('manageEyewear')">Manage
+                            Products</a>
                     </li>
 
                     <!-- Login History -->
                     <li class="nav-item">
-                        <a class="nav-link active" href="#loginHistory" onclick="showSection('loginHistory')">Login History</a>
+                        <a class="nav-link active" href="#loginHistory" onclick="showSection('loginHistory')">Login
+                            History</a>
                     </li>
 
                     <!-- Purchase History -->
                     <li class="nav-item">
-                        <a class="nav-link" href="#purchaseHistory" onclick="showSection('purchaseHistory')">Purchase History</a>
+                        <a class="nav-link" href="#purchaseHistory" onclick="showSection('purchaseHistory')">Purchase
+                            History</a>
                     </li>
                 </ul>
                 <div class="order-lg-last col-lg-5 col-sm-8 col-8">
                     <div class="d-flex float-end">
-                        <form th:action="@{/logout}" method="post" id="logoutForm" style="cursor:pointer;" title="Log out">
+                        <form th:action="@{/logout}" method="post" id="logoutForm" style="cursor:pointer;"
+                              title="Log out">
                             <button type="submit"
                                     class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center btn-danger text-primary"
                                     style="background: lightblue;">
@@ -78,16 +86,20 @@
         <h2 class="mt-3">Manage Categories</h2>
         <!-- Add Category Button -->
         <div class="col">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">Add Category</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">Add
+                Category
+            </button>
             <!-- Add Category Modal -->
-            <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+            <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel"
+                 aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="addCategoryModalLabel">Add Category</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form th:action="@{/category/admin/addCategory.html}" method="post" enctype="multipart/form-data">
+                        <form th:action="@{/category/admin/addCategory.html}" method="post"
+                              enctype="multipart/form-data">
                             <div class="modal-body">
                                 <div class="mb-3">
                                     <label for="categoryName" class="form-label">Name</label>
@@ -95,7 +107,8 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="categoryDescription" class="form-label">Description</label>
-                                    <textarea class="form-control" id="categoryDescription" name="description"></textarea>
+                                    <textarea class="form-control" id="categoryDescription"
+                                              name="description"></textarea>
                                 </div>
                                 <div class="mb-3">
                                     <label for="categoryImage" class="form-label">Category Image</label>
@@ -113,7 +126,8 @@
         </div>
 
         <!-- Edit Category Modal -->
-        <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+        <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel"
+             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -128,7 +142,8 @@
                             </div>
                             <div class="mb-3">
                                 <label for="editCategoryDescription" class="form-label">Description</label>
-                                <textarea class="form-control" id="editCategoryDescription" name="description"></textarea>
+                                <textarea class="form-control" id="editCategoryDescription"
+                                          name="description"></textarea>
                             </div>
                             <div class="mb-3">
                                 <label for="editCategoryImage" class="form-label">Category Image</label>
@@ -163,16 +178,20 @@
                 <td th:text="${category.name}" style="font-weight: bold">Name</td>
                 <td th:text="${category.description}">Description</td>
                 <td><img th:src="${category.imagePath}"
-                         alt="" th:alt="${category.name}" height="48" /></td>
+                         alt="" th:alt="${category.name}" height="48"/></td>
                 <td>
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editCategoryModal"
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                            data-bs-target="#editCategoryModal"
                             th:data-category-id="${category.categoryId}"
                             th:data-category-name="${category.name}"
                             th:data-category-description="${category.description}"
-                            th:data-category-image="${category.imagePath}">Edit</button>
-                    <form th:action="@{/category/admin/deleteCategory.html/{id}(id=${category.categoryId})}" method="post" style="display:inline;">
-                        <input type="hidden" name="_method" value="delete" />
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                            th:data-category-image="${category.imagePath}">Edit
+                    </button>
+                    <form th:action="@{/category/admin/deleteCategory.html/{id}(id=${category.categoryId})}"
+                          method="post" style="display:inline;">
+                        <input type="hidden" name="_method" value="delete"/>
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete
+                        </button>
                     </form>
                 </td>
             </tr>
@@ -182,12 +201,222 @@
 </section>
 
 
-<!-- Manage Products -->
-<section id="manageProducts" class="hidden-section">
+<!-- ===== Manage Eyewear ===== -->
+<section id="manageEyewear" class="hidden-section">
     <div class="container">
-        <h2 class="mt-3">Manage Products</h2>
+        <h2 class="mt-3">Manage Eyewear</h2>
+        <div class="col">
+            <!-- Add Eyewear Button -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEyewearModal">Add
+                Eyewear
+            </button>
+            <!-- Add Eyewear Modal -->
+            <div class="modal fade" id="addEyewearModal" tabindex="-1" aria-labelledby="addEyewearModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addEyewearModalLabel">Add Eyewear</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form th:action="@{/eyewear/admin/addEyewear.html}" method="post" enctype="multipart/form-data">
+                            <div class="modal-body">
+                                <!-- Manufacturer Select -->
+                                <div class="mb-3">
+                                    <label for="eyewearManufacturer" class="form-label">Manufacturer</label>
+                                    <select class="form-select" id="eyewearManufacturer" name="manufacturerId">
+                                        <option th:each="manufacturer : ${manufacturers}"
+                                                th:value="${manufacturer.manufacturerId}"
+                                                th:text="${manufacturer.name}"></option>
+                                    </select>
+                                </div>
+                                <!-- Brand Select -->
+                                <div class="mb-3">
+                                    <label for="eyewearBrand" class="form-label">Brand</label>
+                                    <select class="form-select" id="eyewearBrand" name="brandId">
+                                        <option th:each="brand : ${brands}" th:value="${brand.brandId}"
+                                                th:text="${brand.name}"></option>
+                                    </select>
+                                </div>
+                                <!-- Category Select -->
+                                <div class="mb-3">
+                                    <label for="eyewearCategory" class="form-label">Category</label>
+                                    <select class="form-select" id="eyewearCategory" name="categoryId">
+                                        <option th:each="category : ${categories}" th:value="${category.categoryId}"
+                                                th:text="${category.name}"></option>
+                                    </select>
+                                </div>
+                                <!-- Name Input -->
+                                <div class="mb-3">
+                                    <label for="eyewearName" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="eyewearName" name="name" required>
+                                </div>
+                                <!-- Description Input -->
+                                <div class="mb-3">
+                                    <label for="eyewearDescription" class="form-label">Description</label>
+                                    <textarea class="form-control" id="eyewearDescription"
+                                              name="description"></textarea>
+                                </div>
+                                <!-- Price Input -->
+                                <div class="mb-3">
+                                    <label for="eyewearPrice" class="form-label">Price</label>
+                                    <input type="number" step="0.01" class="form-control" id="eyewearPrice" name="price" required>
+                                </div>
+                                <!-- Stock Quantity Input -->
+                                <div class="mb-3">
+                                    <label for="eyewearStockQuantity" class="form-label">Stock Quantity</label>
+                                    <input type="number" class="form-control" id="eyewearStockQuantity"
+                                           name="stockQuantity" required>
+                                </div>
+                                <!-- Image Input -->
+                                <div class="mb-3">
+                                    <label for="eyewearImage" class="form-label">Image</label>
+                                    <input type="file" class="form-control" id="eyewearImage" name="image">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Add Eyewear</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Edit Eyewear Modal -->
+        <div class="modal fade" id="editEyewearModal" tabindex="-1" aria-labelledby="editEyewearModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editEyewearModalLabel">Edit Eyewear</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form th:action="@{/eyewear/admin/editEyewear.html}" method="post" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="editEyewearName" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="editEyewearName" name="name" required>
+                            </div>
+                            <!-- Manufacturer Select -->
+                            <div class="mb-3">
+                                <label for="editEyewearManufacturer" class="form-label">Manufacturer</label>
+                                <select class="form-control" id="editEyewearManufacturer" name="manufacturerId"
+                                        required>
+                                    <option th:each="manufacturer : ${manufacturers}"
+                                            th:value="${manufacturer.manufacturerId}"
+                                            th:selected="${manufacturer.manufacturerId} == eyewear.manufacturer.manufacturerId"
+                                            th:text="${manufacturer.name}">Manufacturer
+                                    </option>
+                                </select>
+                            </div>
+                            <!-- Brand Select -->
+                            <div class="mb-3">
+                                <label for="editEyewearBrand" class="form-label">Brand</label>
+                                <select class="form-control" id="editEyewearBrand" name="brandId" required>
+                                    <option th:each="brand : ${brands}"
+                                            th:value="${brand.brandId}"
+                                            th:selected="${brand.brandId} == eyewear.brand.brandId"
+                                            th:text="${brand.name}">Brand
+                                    </option>
+                                </select>
+                            </div>
+                            <!-- Category Select -->
+                            <div class="mb-3">
+                                <label for="editEyewearCategory" class="form-label">Category</label>
+                                    <select class="form-control" id="editEyewearCategory" name="categoryId" required>
+                                    <option th:each="category : ${categories}"
+                                            th:value="${category.categoryId}"
+                                            th:selected="${category.categoryId} == eyewear.category.categoryId"
+                                            th:text="${category.name}">Category
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editEyewearDescription" class="form-label">Description</label>
+                                <textarea class="form-control" id="editEyewearDescription"
+                                          name="description"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editEyewearPrice" class="form-label">Price</label>
+                                <input type="number" step="0.01" class="form-control" id="editEyewearPrice" name="price" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editEyewearStockQuantity" class="form-label">Stock Quantity</label>
+                                <input type="number" class="form-control" id="editEyewearStockQuantity"
+                                       name="stockQuantity"
+                                       required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editEyewearImage" class="form-label">Category Image</label>
+                                <input type="file" class="form-control" id="editEyewearImage" name="imgFile">
+                            </div>
+                            <input type="hidden" id="editEyewearId" name="eyewearId">
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Eyewear Table -->
+        <table class="table table-striped mt-3">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Manufacturer</th>
+                <th scope="col">Brand</th>
+                <th scope="col">Category</th>
+                <th scope="col">Price</th>
+                <th scope="col">Stock Quantity</th>
+                <th scope="col">Image</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="eyewear, iterStat : ${eyewears}">
+                <th scope="row" th:text="${iterStat.count}">1</th>
+                <td th:text="${eyewear.name}">Name</td>
+                <td th:text="${eyewear.manufacturer.name}">Manufacturer</td>
+                <td th:text="${eyewear.brand.name}">Brand</td>
+                <td th:text="${eyewear.category.name}">Category</td>
+                <td th:text="${eyewear.price}">Price</td>
+                <td th:text="${eyewear.stockQuantity}">Stock Quantity</td>
+                <td>
+                    <img th:src="${eyewear.imagePath}" alt="" th:alt="${eyewear.name}" height="48"/>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                            data-bs-target="#editEyewearModal"
+                            th:data-eyewear-id="${eyewear.eyewearId}"
+                            th:data-eyewear-name="${eyewear.name}"
+                            th:data-eyewear-manufacturer-id="${eyewear.manufacturer.manufacturerId}"
+                            th:data-eyewear-brand-id="${eyewear.brand.brandId}"
+                            th:data-eyewear-category-id="${eyewear.category.categoryId}"
+                            th:data-eyewear-description="${eyewear.description}"
+                            th:data-eyewear-price="${eyewear.price}"
+                            th:data-eyewear-stock-quantity="${eyewear.stockQuantity}"
+                            th:data-eyewear-image="${eyewear.imagePath}">Edit
+                    </button>
+                    <form th:action="@{/eyewear/admin/deleteEyewear.html/{id}(id=${eyewear.eyewearId})}" method="post"
+                          style="display:inline;">
+                        <input type="hidden" name="_method" value="delete"/>
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </section>
+
 
 <!-- Login History -->
 <section id="loginHistory">
