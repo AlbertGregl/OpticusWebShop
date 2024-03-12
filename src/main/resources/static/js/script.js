@@ -25,7 +25,7 @@ function showSection(sectionId) {
     }
 }
 
-
+// showCategoryProducts function
 function showCategoryProducts(categoryId) {
     // TODO: Show only the products for the selected category
     console.log("Showing products for category:", categoryId);
@@ -41,3 +41,20 @@ function showCategoryProducts(categoryId) {
         }
     }
 }
+
+
+// edit category modal helper
+$(document).ready(function() {
+    $('#editCategoryModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var categoryId = button.data('category-id');
+        var categoryName = button.data('category-name');
+        var categoryDescription = button.data('category-description');
+
+        var modal = $(this);
+        modal.find('#editCategoryId').val(categoryId);
+        modal.find('#editCategoryName').val(categoryName);
+        modal.find('#editCategoryDescription').val(categoryDescription);
+    });
+});
+

@@ -1,18 +1,14 @@
 package gregl.opticuswebshop.controller;
 
 import gregl.opticuswebshop.DTO.model.Category;
-import gregl.opticuswebshop.DTO.model.Eyewear;
 import gregl.opticuswebshop.DTO.util.FileUploadUtil;
 import gregl.opticuswebshop.service.CategoryService;
-import gregl.opticuswebshop.service.EyewearService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -20,7 +16,6 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService categoryService;
-    private final EyewearService eyewearService;
 
     @PostMapping("/admin/addCategory.html")
     public String addCategory(@ModelAttribute("category") Category category,
@@ -43,14 +38,33 @@ public class CategoryController {
         return "redirect:/admin.html";
     }
 
-    @GetMapping("/{id}")
-    public String showCategoryProducts(@PathVariable("id") Long categoryId, Model model) {
-        // Fetch products based on categoryId
-        //List<Eyewear> products = eyewearService.findEyewearById(categoryId);
-        //model.addAttribute("products", products);
-        // Assuming you have a view named 'category-products.html'
-        return "category-products";
-    }
 
+    @PostMapping("/admin/editCategory.html")
+    public String updateCategory(@RequestParam("categoryId") Integer id,
+                                 @ModelAttribute("category") Category category,
+                                 BindingResult result,
+                                 RedirectAttributes redirectAttributes,
+                                 @RequestParam("imgFile") MultipartFile imgFile) {
+        if (!result.hasErrors()) {
+            Category existingCategory = categoryService.findCategoryById(id.longValue());
+            if (existingCategory != null) {
+                existingCategory.setName(category.getName());
+                existingCategory.setDescription(category.getDescription());
+
+                if (!imgFile.isEmpty()) {
+                    String imagePath = FileUploadUtil.saveFile(imgFile);
+                    existingCategory.setImagePath(imagePath);
+                }
+
+                categoryService.saveCategory(existingCategory);
+                redirectAttributes.addFlashAttribute("successMessage", "Category updated successfully!");
+            } else {
+                redirectAttributes.addFlashAttribute("errorMessage", "Category not found!");
+            }
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Validation errors occurred!");
+        }
+        return "redirect:/admin.html";
+    }
 
 }
