@@ -418,12 +418,32 @@
 </section>
 
 
-<!-- Login History -->
+<!-- ===== Login History Section ===== -->
 <section id="loginHistory">
     <div class="container">
         <h2 class="mt-3">Login History</h2>
+        <!-- Login History Table -->
+        <table class="table table-striped mt-3">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Username</th>
+                <th scope="col">Login Time</th>
+                <th scope="col">IP Address</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="loginHistory, iterStat : ${loginHistories}">
+                <th scope="row" th:text="${iterStat.count}">1</th>
+                <td th:text="${loginHistory.user.username}">Username</td>
+                <td th:text="${#temporals.format(loginHistory.loginTime, 'yyyy-MM-dd HH:mm:ss')}">Login Time</td>
+                <td th:text="${loginHistory.ipAddress}">IP Address</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </section>
+
 
 <!-- Purchase History -->
 <section id="purchaseHistory" class="hidden-section">

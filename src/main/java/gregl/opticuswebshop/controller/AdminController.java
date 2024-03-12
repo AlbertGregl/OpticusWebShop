@@ -4,10 +4,8 @@ import gregl.opticuswebshop.DTO.model.Brand;
 import gregl.opticuswebshop.DTO.model.Category;
 import gregl.opticuswebshop.DTO.model.Eyewear;
 import gregl.opticuswebshop.DTO.model.Manufacturer;
-import gregl.opticuswebshop.service.BrandService;
-import gregl.opticuswebshop.service.CategoryService;
-import gregl.opticuswebshop.service.EyewearService;
-import gregl.opticuswebshop.service.ManufacturerService;
+import gregl.opticuswebshop.DTO.model.LoginHistory;
+import gregl.opticuswebshop.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -24,6 +22,7 @@ public class AdminController {
     private final ManufacturerService manufacturerService;
     private final BrandService brandService;
     private final EyewearService eyewearService;
+    private final LoginHistoryService loginHistoryService;
 
     @GetMapping("/admin.html")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
@@ -32,7 +31,9 @@ public class AdminController {
         List<Manufacturer> manufacturers = manufacturerService.findAllManufacturers();
         List<Brand> brands = brandService.findAllBrands();
         List<Eyewear> eyewears = eyewearService.findAllEyewear();
+        List<LoginHistory> loginHistories = loginHistoryService.findAllLoginHistory();
 
+        model.addAttribute("loginHistories", loginHistories);
         model.addAttribute("categories", categories);
         model.addAttribute("manufacturers", manufacturers);
         model.addAttribute("brands", brands);
