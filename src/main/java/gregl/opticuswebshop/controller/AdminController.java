@@ -1,5 +1,4 @@
 package gregl.opticuswebshop.controller;
-
 import gregl.opticuswebshop.DTO.model.*;
 import gregl.opticuswebshop.service.*;
 import lombok.AllArgsConstructor;
@@ -19,7 +18,7 @@ public class AdminController {
     private final BrandService brandService;
     private final EyewearService eyewearService;
     private final LoginHistoryService loginHistoryService;
-    private final PurchaseHistoryService purchaseHistoryService;
+    private final PurchaseOrderService purchaseOrderService;
 
     @GetMapping("/admin.html")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
@@ -29,9 +28,9 @@ public class AdminController {
         List<Brand> brands = brandService.findAllBrands();
         List<Eyewear> eyewears = eyewearService.findAllEyewear();
         List<LoginHistory> loginHistories = loginHistoryService.findAllLoginHistory();
-        List<PurchaseHistory> purchaseHistories = purchaseHistoryService.findAllPurchaseHistory();
+        List<PurchaseOrder> purchaseOrders = purchaseOrderService.findAllPurchaseOrder();
 
-        model.addAttribute("purchaseHistories", purchaseHistories);
+        model.addAttribute("purchaseOrders", purchaseOrders);
         model.addAttribute("loginHistories", loginHistories);
         model.addAttribute("categories", categories);
         model.addAttribute("manufacturers", manufacturers);

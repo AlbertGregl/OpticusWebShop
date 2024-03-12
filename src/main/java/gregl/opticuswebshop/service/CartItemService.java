@@ -1,12 +1,12 @@
 package gregl.opticuswebshop.service;
 
-import gregl.opticuswebshop.DTO.model.CartItem;
+import gregl.opticuswebshop.DTO.model.CartItems;
 
 import java.util.List;
 
 public interface CartItemService {
-    List<CartItem> findAllCartItem();
-    CartItem findCartItemById(Long id);
-    CartItem saveCartItem(CartItem cartItem);
+    List<CartItems> findAllCartItem();
+    CartItems findCartItemById(Long id);
+    CartItems saveCartItem(CartItems cartItems);
     void deleteCartItemById(Long id);
 }

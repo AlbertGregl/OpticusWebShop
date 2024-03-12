@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "eyewear")
 @Data
+@Table(name = "eyewear")
 public class Eyewear {
 
     @Id
@@ -25,7 +25,7 @@ public class Eyewear {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "name")
     private String name;
 
     @Column(columnDefinition = "TEXT", name = "description")
