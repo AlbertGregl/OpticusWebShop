@@ -46,7 +46,8 @@
                             </a>
                         </div>
                         <div sec:authorize="isAuthenticated()">
-                            <form th:action="@{/logout}" method="post" id="logoutForm" style="cursor:pointer;" title="Log out">
+                            <form th:action="@{/logout}" method="post" id="logoutForm" style="cursor:pointer;"
+                                  title="Log out">
                                 <button type="submit"
                                         class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center btn-primary text-primary"
                                         style="background: lightblue;">
@@ -132,7 +133,8 @@
                             <form th:action="@{/register}" method="post" class="p-3">
                                 <div class="mb-3">
                                     <label for="registerUsername" class="form-label">Username</label>
-                                    <input type="text" class="form-control" id="registerUsername" name="username" required>
+                                    <input type="text" class="form-control" id="registerUsername" name="username"
+                                           required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email</label>
@@ -140,7 +142,8 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="registerPassword" class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="registerPassword" name="password" required>
+                                    <input type="password" class="form-control" id="registerPassword" name="password"
+                                           required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="address" class="form-label">Address</label>
@@ -187,7 +190,8 @@
                         </li>
                         <li class="nav-item">
                             <div sec:authorize="hasRole('ROLE_CUSTOMER')">
-                                <a class="btn btn-primary nav-link text-primary text-primary" style="font-weight: bold" href="#profile"
+                                <a class="btn btn-primary nav-link text-primary text-primary" style="font-weight: bold"
+                                   href="#profile"
                                    onclick="showSection('profile')">Profile</a>
                             </div>
                         </li>
@@ -200,16 +204,19 @@
 </header>
 
 
-<!-- category -->
+<!-- ===== category ===== -->
 <section id="categories" class="hidden-section">
     <div class="container pt-5">
         <nav class="row gy-4">
             <div class="col-lg-6 col-md-12">
                 <div class="row">
                     <div th:each="category : ${categories}" class="col-3">
-                        <a href="javascript:void(0);" th:attr="data-category-id=${category.categoryId}" onclick="showCategoryProducts(this.getAttribute('data-category-id'))"
+                        <a href="javascript:void(0);"
+                           th:data-category-id="${category.categoryId}"
+                           th:onclick="'showProductsForCategory(\'' + ${category.categoryId} + '\')'"
                            class="btn btn-outline-primary text-center d-flex flex-column justify-content-center mx-auto p-3 mb-2">
-                            <img th:src="${category.imagePath}" src="/static/img/glasses.svg" height="64" alt="" th:alt="${category.name}">
+                            <img th:src="${category.imagePath}" src="/static/img/glasses.svg" height="64" alt=""
+                                 th:alt="${category.name}">
                             <p class="pt-2" th:text="${category.name}" style="font-weight: bolder">Category</p>
                         </a>
                     </div>
@@ -250,180 +257,37 @@
 </section>
 
 
-<div>
-
-</div>
 <!-- Products SECTION -->
-<section id="prodGlasses" class="hidden-section">
+<section id="products" class="hidden-section">
     <div class="container my-5">
         <header class="mb-4">
-            <h3>Glasses</h3>
+            <h3 id="productsHeader">Products</h3>
         </header>
-
         <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card my-2 shadow-0">
+            <div th:each="eyewear : ${eyewears}" class="col-lg-3 col-md-6 col-sm-6 product-card"
+                 th:attr="data-category-id=${eyewear.category.categoryId}" style="display: none;">
+                <div class="card my-2 shadow-0 p-3">
                     <a href="#" class="">
-                        <div class="mask" style="height: 50px;">
-                            <div class="d-flex justify-content-start align-items-start h-100 m-2">
-                                <h6><span class="badge bg-danger pt-1">New</span></h6>
-                            </div>
+                        <img th:src="${eyewear.imagePath}" class="card-img-top rounded-2"
+                             src="/static/img/testImg.jpg"
+                             style="object-fit: cover; object-position: center; width: 256px; height: 256px;"/>
+                    </a>
+                    <div class="card-body p-0 pt-2 text-end">
+                        <a href="javascript:void(0);"
+                           th:onclick="'addEyewearToCart(\'' + ${eyewear.eyewearId} + '\')'"
+                           class="btn btn-outline-primary btn-success p-2">
+                            <img th:src="@{/img/shopping-cart-solid.svg}" src="/static/img/shopping-cart-solid.svg" height="32" alt=""
+                                 th:alt="${eyewear.name}">
+                        </a>
+                        <div class="text-start">
+                            <h5 class="card-title" th:text="${eyewear.price}"></h5>
+                            <p class="card-text mb-0" th:text="${eyewear.name}"></p>
+                            <p class="text-muted" th:text="${eyewear.description}"></p>
                         </div>
-                        <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/1.webp"
-                             class="card-img-top rounded-2" style="aspect-ratio: 1 / 1"/>
-                    </a>
-                    <div class="card-body p-0 pt-3">
-                        <a href="#!" class="btn btn-light border px-2 pt-2 float-end icon-hover"><i
-                                class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
-                        <h5 class="card-title">$29.95</h5>
-                        <p class="card-text mb-0">GoPro action camera 4K</p>
-                        <p class="text-muted">
-                            Model: X-200
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card my-2 shadow-0">
-                    <a href="#" class="">
-                        <div class="mask" style="height: 50px;">
-                            <div class="d-flex justify-content-start align-items-start h-100 m-2">
-                                <h6><span class="badge pt-1" style="background-color: #f87217;">Offer</span></h6>
-                            </div>
-                        </div>
-                        <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/2.webp"
-                             class="card-img-top rounded-2" style="aspect-ratio: 1 / 1"/>
-                    </a>
-                    <div class="card-body p-0 pt-2">
-                        <a href="#!" class="btn btn-light border px-2 pt-2 float-end icon-hover"><i
-                                class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
-                        <h5 class="card-title">$590.00</h5>
-                        <p class="card-text mb-0">Canon EOS professional</p>
-                        <p class="text-muted">
-                            Capacity: 128GB
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card my-2 shadow-0">
-                    <a href="#" class="">
-                        <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/3.webp"
-                             class="card-img-top rounded-2" style="aspect-ratio: 1 / 1"/>
-                    </a>
-                    <div class="card-body p-0 pt-2">
-                        <a href="#!" class="btn btn-light border px-2 pt-2 float-end icon-hover"><i
-                                class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
-                        <h5 class="card-title">$29.95</h5>
-                        <p class="card-text mb-0">Modern product name here</p>
-                        <p class="text-muted">
-                            Sizes: S, M, XL
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card my-2 shadow-0">
-                    <a href="#" class="">
-                        <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/4.webp"
-                             class="card-img-top rounded-2" style="aspect-ratio: 1 / 1"/>
-                    </a>
-                    <div class="card-body p-0 pt-2">
-                        <a href="#!" class="btn btn-light border px-2 pt-2 float-end icon-hover"><i
-                                class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
-                        <h5 class="card-title">$1099.00</h5>
-                        <p class="card-text mb-0">Apple iPhone 13 Pro max</p>
-                        <p class="text-muted">
-                            Color: Black, Memory: 128GB
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card my-2 shadow-0">
-                    <a href="#" class="">
-                        <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/5.webp"
-                             class="card-img-top rounded-2" style="aspect-ratio: 1 / 1"/>
-                    </a>
-                    <div class="card-body p-0 pt-2">
-                        <a href="#!" class="btn btn-light border px-2 pt-2 float-end icon-hover"><i
-                                class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
-                        <h5 class="card-title">$29.95</h5>
-                        <p class="card-text mb-0">Modern product name here</p>
-                        <p class="text-muted">
-                            Sizes: S, M, XL
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card my-2 shadow-0">
-                    <a href="#" class="">
-                        <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/6.webp"
-                             class="card-img-top rounded-2" style="aspect-ratio: 1 / 1"/>
-                    </a>
-                    <div class="card-body p-0 pt-2">
-                        <a href="#!" class="btn btn-light border px-2 pt-2 float-end icon-hover"><i
-                                class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
-                        <h5 class="card-title">$29.95</h5>
-                        <p class="card-text mb-0">Modern product name here</p>
-                        <p class="text-muted">
-                            Model: X-200
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card my-2 shadow-0">
-                    <a href="#" class="">
-                        <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/7.webp"
-                             class="card-img-top rounded-2" style="aspect-ratio: 1 / 1"/>
-                    </a>
-                    <div class="card-body p-0 pt-2">
-                        <a href="#!" class="btn btn-light border px-2 pt-2 float-end icon-hover"><i
-                                class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
-                        <h5 class="card-title">$29.95</h5>
-                        <p class="card-text mb-0">Modern product name here</p>
-                        <p class="text-muted">
-                            Sizes: S, M, XL
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card my-2 shadow-0">
-                    <a href="#" class="">
-                        <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/8.webp"
-                             class="card-img-top rounded-2" style="aspect-ratio: 1 / 1"/>
-                    </a>
-                    <div class="card-body p-0 pt-2">
-                        <a href="#!" class="btn btn-light border px-2 pt-2 float-end icon-hover"><i
-                                class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
-                        <h5 class="card-title">$29.95</h5>
-                        <p class="card-text mb-0">Modern product name here</p>
-                        <p class="text-muted">
-                            Material: Jeans
-                        </p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-
-<section id="prodSunglasses" class="hidden-section">
-    <div class="container my-5">
-        <header class="mb-4">
-            <h3>Sunglasses</h3>
-        </header>
-    </div>
-</section>
-
-<section id="prodAccessories" class="hidden-section">
-    <div class="container my-5">
-        <header class="mb-4">
-            <h3>Accessories</h3>
-        </header>
     </div>
 </section>
 

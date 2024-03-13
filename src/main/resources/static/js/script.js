@@ -1,16 +1,6 @@
 /*SECTIONS; function that will show the selected section and hide the other sections*/
 function showSection(sectionId) {
 
-/*
-    if (sectionId === 'energy')
-    {
-        energyDataModal.style.display = 'block';
-    } else
-    {
-        energyDataModal.style.display = 'none';
-    }
-*/
-
     console.log("Showing section:", sectionId);
     const sections = document.querySelectorAll('section');
     for (const section of sections) {
@@ -27,20 +17,18 @@ function showSection(sectionId) {
 
 // showCategoryProducts function
 function showCategoryProducts(categoryId) {
-    // TODO: Show only the products for the selected category
-    console.log("Showing products for category:", categoryId);
-    const products = document.querySelectorAll('.product');
-    for (const product of products) {
-        console.log("Checking product:", product.id);
-        if (product.id === categoryId) {
-            console.log("Showing:", product.id);
-            product.style.display = 'block';
-        } else {
-            console.log("Hiding:", product.id);
-            product.style.display = 'none';
-        }
-    }
+    document.querySelectorAll('.product-card').forEach(card => {
+        card.style.display = card.getAttribute('data-category-id') === categoryId ? 'block' : 'none';
+    });
+
+    const categoryName = document.querySelector(`[data-category-id="${categoryId}"] p`).textContent;
+    document.getElementById('productsHeader').textContent = categoryName;
 }
+function showProductsForCategory(categoryId) {
+    showSection('products');
+    showCategoryProducts(categoryId);
+}
+
 
 
 // edit category modal helper
@@ -85,6 +73,14 @@ $(document).ready(function() {
     });
 });
 
-
+// add new eyeware in the cart
+function addEyewearToCart(eyewearId) {
+    console.log("Adding eyewear to cart:", eyewearId);
+/*    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart.push(eyewearId);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    console.log("Cart:", cart);
+    updateCartCount();*/
+}
 
 
