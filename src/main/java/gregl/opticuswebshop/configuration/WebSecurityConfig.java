@@ -32,7 +32,10 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/", "/js/**", "/css/**", "/img/**", "/perform_login", "/register/**", "/uploads/img/**").permitAll()
+                        .requestMatchers(
+                                "/", "/js/**", "/css/**", "/img/**",
+                                "/perform_login", "/register/**", "/uploads/img/**",
+                                "/cart/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMINISTRATOR")
                         .anyRequest().authenticated()
                 )
@@ -46,7 +49,8 @@ public class WebSecurityConfig {
                         .logoutSuccessUrl("/")
                         .permitAll()
                 )
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/perform_login", "/perform_logout", "/register/**", "/admin/**", "/uploads/img/**"));
+                .csrf(csrf -> csrf.ignoringRequestMatchers(
+                        "/perform_login", "/perform_logout", "/register/**", "/admin/**", "/uploads/img/**", "/cart/**", "js/**"));
         return http.build();
     }
 
@@ -54,6 +58,7 @@ public class WebSecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {

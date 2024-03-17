@@ -24,15 +24,15 @@ function showCategoryProducts(categoryId) {
     const categoryName = document.querySelector(`[data-category-id="${categoryId}"] p`).textContent;
     document.getElementById('productsHeader').textContent = categoryName;
 }
+
 function showProductsForCategory(categoryId) {
     showSection('products');
     showCategoryProducts(categoryId);
 }
 
 
-
 // edit category modal helper
-$(document).ready(function() {
+$(document).ready(function () {
     $('#editCategoryModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         var categoryId = button.data('category-id');
@@ -48,9 +48,9 @@ $(document).ready(function() {
 
 
 // edit eyewear modal helper
-$(document).ready(function() {
+$(document).ready(function () {
     $('#editEyewearModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); // Button that triggered the modal
+        var button = $(event.relatedTarget);
         var eyewearId = button.attr('data-eyewear-id');
         var eyewearName = button.attr('data-eyewear-name');
         var manufacturerId = button.attr('data-eyewear-manufacturer-id');
@@ -76,11 +76,102 @@ $(document).ready(function() {
 // add new eyeware in the cart
 function addEyewearToCart(eyewearId) {
     console.log("Adding eyewear to cart:", eyewearId);
-/*    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    cart.push(eyewearId);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    console.log("Cart:", cart);
-    updateCartCount();*/
+    let quantity = 1;
+
+    fetch(`/cart/add-to-cart/${eyewearId}?quantity=${quantity}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Eyewear added to cart successfully.');
+                updateCartCount(data.cartItemCount);
+            } else {
+                console.error('Failed to add eyewear to cart.');
+            }
+        })
+        .catch(error => console.error('Error adding eyewear to cart:', error));
 }
+
+// remove item from cart
+function removeItem(itemIndex) {
+    console.log("Attempting to remove item at index:", itemIndex);
+
+    fetch(`/cart/remove-from-cart/${itemIndex}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value
+        },
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                console.log('Item removed successfully.');
+                updateCartCount(data.cartItemCount);
+                location.reload();
+            } else {
+                console.error('Failed to remove item:', data.message);
+            }
+        })
+        .catch(error => console.error('Error removing item from cart:', error));
+}
+
+
+// update quantity of eyewear in the cart
+function updateQuantity(index, eyewearId) {
+    const quantityInput = document.getElementById('qty-' + index);
+    const newQuantity = parseInt(quantityInput.value);
+
+    fetch(`/cart/update-quantity/${eyewearId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value
+        },
+        body: 'quantity=' + newQuantity
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                console.log('Quantity updated successfully.');
+                document.getElementById('total-' + index).textContent = data.newTotal;
+                updateCartCount(data.cartItemCount);
+                location.reload();
+            } else {
+                console.error('Failed to update quantity:', data.message);
+            }
+        })
+        .catch(error => console.error('Error updating quantity:', error));
+}
+
+
+
+// update cart count UI on index.html
+function updateCartCount(newCount) {
+    const cartCountElement = document.getElementById('cartItemCount');
+    if (cartCountElement) {
+        cartCountElement.textContent = newCount;
+    } else {
+        console.error("Cart item count element not found.");
+    }
+}
+
+
+
+
 
 

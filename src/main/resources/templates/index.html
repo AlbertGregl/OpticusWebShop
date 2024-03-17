@@ -57,11 +57,15 @@
                             </form>
                         </div>
                         <div sec:authorize="isAnonymous() or hasAuthority('ROLE_CUSTOMER')">
-                            <a href="#"
-                               class="border rounded me-2 py-1 px-3 nav-link d-flex align-items-center btn-primary">
+                            <a href="/cart/getCart.html"
+                               class="border rounded me-2 py-1 px-3 nav-link d-flex align-items-center btn-primary position-relative">
                                 <img th:src="@{/img/shopping-cart-solid.svg}" src="/static/img/shopping-cart-solid.svg"
                                      class="m-1 me-md-2" alt="" height="32">
                                 <p class="d-none d-md-block mb-0">My cart</p>
+                                <span id="cartItemCount"
+                                      class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    <span th:text="${cartItemCount}">0</span>
+                                </span>
                             </a>
                         </div>
                         <div sec:authorize="hasRole('ROLE_ADMINISTRATOR')">
@@ -276,7 +280,8 @@
                         <a href="javascript:void(0);"
                            th:onclick="'addEyewearToCart(\'' + ${eyewear.eyewearId} + '\')'"
                            class="btn btn-outline-primary btn-success p-2">
-                            <img th:src="@{/img/shopping-cart-solid.svg}" src="/static/img/shopping-cart-solid.svg" height="32" alt=""
+                            <img th:src="@{/img/shopping-cart-solid.svg}" src="/static/img/shopping-cart-solid.svg"
+                                 height="32" alt=""
                                  th:alt="${eyewear.name}">
                         </a>
                         <div class="text-start">

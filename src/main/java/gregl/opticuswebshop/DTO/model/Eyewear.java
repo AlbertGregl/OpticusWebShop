@@ -2,6 +2,7 @@ package gregl.opticuswebshop.DTO.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
@@ -11,7 +12,7 @@ public class Eyewear {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "eyewear_id")
-    private Integer eyewearId;
+    private Long eyewearId;
 
     @ManyToOne
     @JoinColumn(name = "manufacturer_id", nullable = false)
