@@ -99,28 +99,11 @@ function addEyewearToCart(eyewearId) {
 // remove item from cart
 function removeItem(itemIndex) {
     console.log("Attempting to remove item at index:", itemIndex);
-
-    fetch(`/cart/remove-from-cart/${itemIndex}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value
-        },
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
+    performFetch(`/cart/remove-from-cart/${itemIndex}`, 'POST')
         .then(data => {
-            if (data.success) {
-                console.log('Item removed successfully.');
-                updateCartCount(data.cartItemCount);
-                location.reload();
-            } else {
-                console.error('Failed to remove item:', data.message);
-            }
+            console.log('Item removed successfully.');
+            updateCartCount(data.cartItemCount);
+            location.reload();
         })
         .catch(error => console.error('Error removing item from cart:', error));
 }
@@ -130,34 +113,38 @@ function removeItem(itemIndex) {
 function updateQuantity(index, eyewearId) {
     const quantityInput = document.getElementById('qty-' + index);
     const newQuantity = parseInt(quantityInput.value);
+    performFetch(`/cart/update-quantity/${eyewearId}`, 'POST', 'quantity=' + newQuantity)
+        .then(data => {
+            console.log('Quantity updated successfully.');
+            document.getElementById('total-' + index).textContent = data.newTotal;
+            updateCartCount(data.cartItemCount);
+            location.reload();
+        })
+        .catch(error => console.error('Error updating quantity:', error));
+}
 
-    fetch(`/cart/update-quantity/${eyewearId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value
-        },
-        body: 'quantity=' + newQuantity
-    })
+// fetch function
+function performFetch(url, method, body = null) {
+    const headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value,
+    };
+    const fetchConfig = {
+        method: method,
+        headers: headers,
+    };
+    if (body) {
+        fetchConfig.body = body;
+    }
+
+    return fetch(url, fetchConfig)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                console.log('Quantity updated successfully.');
-                document.getElementById('total-' + index).textContent = data.newTotal;
-                updateCartCount(data.cartItemCount);
-                location.reload();
-            } else {
-                console.error('Failed to update quantity:', data.message);
-            }
-        })
-        .catch(error => console.error('Error updating quantity:', error));
+        });
 }
-
 
 
 // update cart count UI on index.html

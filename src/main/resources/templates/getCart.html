@@ -41,11 +41,14 @@
                 <td th:text="${item.eyewear.name}">Product Name</td>
                 <td th:text="${item.eyewear.price}">Product Price</td>
                 <td>
-                    <input type="number" th:value="${item.quantity}" min="1" th:id="'qty-' + ${stat.index}" class="form-control quantity-input"/>
+                    <input type="number" th:value="${item.quantity}" min="1" th:id="'qty-' + ${stat.index}"
+                           class="form-control quantity-input"/>
                 </td>
                 <td th:text="${item.quantity * item.eyewear.price}" th:id="'total-' + ${stat.index}">Total Price</td>
                 <td>
-                    <button th:onclick="'updateQuantity(' + ${stat.index} + ', ' + ${item.eyewear.eyewearId} + ')' " class="btn btn-info">Update</button>
+                    <button th:onclick="'updateQuantity(' + ${stat.index} + ', ' + ${item.eyewear.eyewearId} + ')' "
+                            class="btn btn-info">Update
+                    </button>
                 </td>
                 <td>
                     <button th:onclick="'removeItem(' + ${stat.index} + ')'" class="btn btn-danger">Remove</button>
@@ -58,15 +61,102 @@
             <div sec:authorize="isAuthenticated()">
                 <a href="/checkout" class="btn btn-primary">Proceed to Checkout</a>
             </div>
-            <div sec:authorize="!isAuthenticated()">
-                <p>You need to <a href="/login">Login</a> or <a href="/register">Register</a> to proceed with the purchase.</p>
+            <div sec:authorize="!isAuthenticated()" class="row">
+                <div class="col-auto">
+                    <p>You need to sign in to proceed with the purchase.</p>
+                </div>
+                <div class="col-auto">
+                    <a href="#"
+                       class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center btn-primary"
+                       data-bs-toggle="modal"
+                       data-bs-target="#authModal">
+                        <img th:src="@{/img/user-alt-solid.svg}" src="/static/img/user-alt-solid.svg"
+                             class="m-1 me-md-2" alt="" height="32">
+                        <p class="d-none d-md-block mb-0">Sign in</p>
+                    </a>
+                </div>
             </div>
         </div>
+
     </div>
     <div th:if="${#lists.isEmpty(cart)}">
         <p>Your cart is empty!</p>
     </div>
 </div>
 <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+
+<!-- auth modal -->
+<div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="authModalLabel">Login / Register</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" id="authTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login"
+                                type="button" role="tab" aria-controls="login" aria-selected="true">Login
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register"
+                                type="button" role="tab" aria-controls="register" aria-selected="false">Register
+                        </button>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
+                        <!-- Login Form -->
+                        <form action="#" th:action="@{/perform_login}" method="post" class="p-3">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
+                        <form th:action="@{/register}" method="post" class="p-3">
+                            <div class="mb-3">
+                                <label for="registerUsername" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="registerUsername" name="username"
+                                       required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="registerPassword" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="registerPassword" name="password"
+                                       required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Address</label>
+                                <input type="text" class="form-control" id="address" name="address">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 </body>
 </html>
