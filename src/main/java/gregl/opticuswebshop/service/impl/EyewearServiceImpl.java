@@ -4,6 +4,9 @@ import gregl.opticuswebshop.DTO.model.Eyewear;
 import gregl.opticuswebshop.DTO.repository.EyewearRepository;
 import gregl.opticuswebshop.service.EyewearService;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

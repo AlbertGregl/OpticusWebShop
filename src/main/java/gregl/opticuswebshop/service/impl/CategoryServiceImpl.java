@@ -5,6 +5,7 @@ import gregl.opticuswebshop.DTO.model.Category;
 import gregl.opticuswebshop.DTO.repository.CategoryRepository;
 import gregl.opticuswebshop.service.CategoryService;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
