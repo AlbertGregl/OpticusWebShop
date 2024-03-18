@@ -9,4 +9,6 @@ public interface EyewearService {
     Eyewear findEyewearById(Long id);
     void saveEyewear(Eyewear eyewear);
     void deleteEyewearById(Long id);
+
+    List<Eyewear> findAllEyewearInStock();
 }

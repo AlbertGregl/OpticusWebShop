@@ -33,4 +33,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     public void deletePurchaseOrderById(Long id) {
         purchaseOrderRepository.deleteById(id);
     }
+
+    @Override
+    public List<PurchaseOrder> findPurchaseOrdersByUsername(String username) {
+        return purchaseOrderRepository.findByUserUsername(username);
+    }
 }

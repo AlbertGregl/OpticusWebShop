@@ -36,4 +36,9 @@ public class EyewearServiceImpl implements EyewearService {
     public void deleteEyewearById(Long id) {
         eyewearRepository.deleteById(id);
     }
+
+    @Override
+    public List<Eyewear> findAllEyewearInStock() {
+        return eyewearRepository.findByStockQuantityGreaterThan(0);
+    }
 }

@@ -103,6 +103,12 @@ public class CartController {
 
         purchaseOrderService.savePurchaseOrder(order);
 
+        for (CartItems item : cart) {
+            Eyewear eyewear = item.getEyewear();
+            eyewear.setStockQuantity(eyewear.getStockQuantity() - item.getQuantity());
+            eyewearService.saveEyewear(eyewear);
+        }
+
         session.removeAttribute("cart");
 
         model.addAttribute("orderSuccess", "Thank you for your purchase! Your order number is " + order.getOrderId() + ".");

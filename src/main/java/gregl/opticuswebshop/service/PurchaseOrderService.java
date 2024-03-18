@@ -9,4 +9,5 @@ public interface PurchaseOrderService {
     PurchaseOrder findPurchaseOrderById(Long id);
     PurchaseOrder savePurchaseOrder(PurchaseOrder purchaseOrder);
     void deletePurchaseOrderById(Long id);
+    List<PurchaseOrder> findPurchaseOrdersByUsername(String username);
 }
