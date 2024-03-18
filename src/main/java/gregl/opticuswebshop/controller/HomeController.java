@@ -37,7 +37,7 @@ public class HomeController {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String username = userDetails.getUsername();
             List<PurchaseOrder> purchaseOrders = purchaseOrderService.findPurchaseOrdersByUsername(username);
-            model.addAttribute("purchaseOrders", purchaseOrders);
+            model.addAttribute("purchaseOrdersIndex", purchaseOrders);
         }
 
         model.addAttribute("eyewears", eyewears);
