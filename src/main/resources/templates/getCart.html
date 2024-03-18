@@ -24,6 +24,17 @@
 <body>
 <div class="container my-4">
     <h2>Shopping Cart</h2>
+
+    <!-- success message -->
+    <div th:if="${orderSuccess}" class="alert alert-success" role="alert">
+        <span th:text="${orderSuccess}"></span>
+    </div>
+
+    <!-- error message -->
+    <div th:if="${orderError}" class="alert alert-danger" role="alert">
+        <span th:text="${orderError}"></span>
+    </div>
+
     <div th:if="${not #lists.isEmpty(cart)}">
         <table class="table">
             <thead>
@@ -41,8 +52,10 @@
                 <td th:text="${item.eyewear.name}">Product Name</td>
                 <td th:text="${item.eyewear.price}">Product Price</td>
                 <td>
-                    <input type="number" th:value="${item.quantity}" min="1" th:id="'qty-' + ${stat.index}"
-                           class="form-control quantity-input"/>
+                    <label>
+                        <input type="number" th:value="${item.quantity}" min="1" th:max="${item.eyewear.stockQuantity}" th:id="'qty-' + ${stat.index}"
+                               class="form-control quantity-input"/>
+                    </label>
                 </td>
                 <td th:text="${item.quantity * item.eyewear.price}" th:id="'total-' + ${stat.index}">Total Price</td>
                 <td>
@@ -59,7 +72,15 @@
         <div class="text-end">
             <h3>Total: <span th:text="${total}">Total</span></h3>
             <div sec:authorize="isAuthenticated()">
-                <a href="/checkout" class="btn btn-primary">Proceed to Checkout</a>
+                <form action="/cart/completePurchase.html" method="post">
+                    <div class="payment-method">
+                        <input type="radio" id="cashOnDelivery" name="paymentMethod" value="CASH_ON_DELIVERY" checked>
+                        <label for="cashOnDelivery">Cash on Delivery</label><br>
+                        <input type="radio" id="paypal" name="paymentMethod" value="PAYPAL">
+                        <label for="paypal">PayPal</label><br>
+                    </div>
+                    <input type="submit" value="Checkout" class="btn btn-primary">
+                </form>
             </div>
             <div sec:authorize="!isAuthenticated()" class="row">
                 <div class="col-auto">

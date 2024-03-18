@@ -1,18 +1,20 @@
 package gregl.opticuswebshop.controller;
 
-import gregl.opticuswebshop.DTO.model.CartItems;
-import gregl.opticuswebshop.DTO.model.Eyewear;
-import gregl.opticuswebshop.DTO.model.PurchaseOrder;
+import gregl.opticuswebshop.DTO.model.*;
 import gregl.opticuswebshop.service.EyewearService;
 import gregl.opticuswebshop.service.PurchaseOrderService;
+import gregl.opticuswebshop.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +27,7 @@ public class CartController {
 
     private final EyewearService eyewearService;
     private final PurchaseOrderService purchaseOrderService;
+    private final UserService userService;
 
     @GetMapping("/getCart.html")
     public String showCart(Model model, HttpSession session) {
@@ -73,24 +76,41 @@ public class CartController {
     }
 
 
-    @PostMapping("/complete-purchase")
-    public String completePurchase(HttpSession session) {
+    @PostMapping("/completePurchase.html")
+    public String completePurchase(HttpSession session, @RequestParam("paymentMethod") String paymentMethodStr, Authentication authentication, Model model) {
         List<CartItems> cart = (List<CartItems>) session.getAttribute("cart");
+        if (cart == null || cart.isEmpty() || authentication == null) {
+            model.addAttribute("orderError", "There was an error with your order. Please try again.");
+            return "getCart";
+        }
 
-        if (cart == null || cart.isEmpty()) {
-            return "redirect:/error";
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userService.findUserByUsername(userDetails.getUsername());
+        if (user == null) {
+            model.addAttribute("orderError", "User not found. Please log in again.");
+            return "getCart";
         }
 
         PurchaseOrder order = new PurchaseOrder();
-        // Set user, date, payment method, etc.
+        order.setUser(user);
+        order.setPurchaseDate(LocalDateTime.now());
+        order.setPaymentMethod(PaymentMethod.valueOf(paymentMethodStr.toUpperCase()));
 
-        order.setItems(new ArrayList<>(cart));
+        for (CartItems item : cart) {
+            item.setPurchaseOrder(order);
+        }
+        order.setItems(cart);
+
         purchaseOrderService.savePurchaseOrder(order);
 
         session.removeAttribute("cart");
 
-        return "redirect:/order-confirmation";
+        model.addAttribute("orderSuccess", "Thank you for your purchase! Your order number is " + order.getOrderId() + ".");
+        model.addAttribute("cart", new ArrayList<CartItems>()); // Empty the cart in the view
+        return "getCart";
     }
+
+
 
     @PostMapping("/remove-from-cart/{itemIndex}")
     @ResponseBody
@@ -138,7 +158,6 @@ public class CartController {
 
         return ResponseEntity.ok(response);
     }
-
 
 
     private int calculateCartItemCount(List<CartItems> cart) {
