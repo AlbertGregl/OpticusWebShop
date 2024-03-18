@@ -6,6 +6,7 @@ import gregl.opticuswebshop.service.PurchaseOrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -37,5 +38,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     @Override
     public List<PurchaseOrder> findPurchaseOrdersByUsername(String username) {
         return purchaseOrderRepository.findByUserUsername(username);
+    }
+
+    @Override
+    public List<PurchaseOrder> findPurchaseOrdersByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+        return purchaseOrderRepository.findByPurchaseDateBetween(startDate, endDate);
     }
 }

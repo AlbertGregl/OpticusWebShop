@@ -2,11 +2,14 @@ package gregl.opticuswebshop.controller;
 import gregl.opticuswebshop.DTO.model.*;
 import gregl.opticuswebshop.service.*;
 import lombok.AllArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -38,5 +41,24 @@ public class AdminController {
         model.addAttribute("eyewears", eyewears);
         return "admin";
     }
+
+    @GetMapping("/admin/filter")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+    public String filterPurchaseOrders(Model model, @RequestParam(required = false) String username, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        List<PurchaseOrder> purchaseOrders;
+
+        if (username != null && !username.isEmpty()) {
+            purchaseOrders = purchaseOrderService.findPurchaseOrdersByUsername(username);
+        } else if (startDate != null && endDate != null) {
+            purchaseOrders = purchaseOrderService.findPurchaseOrdersByDateRange(startDate.atStartOfDay(), endDate.atTime(23, 59, 59));
+        } else {
+            purchaseOrders = purchaseOrderService.findAllPurchaseOrder();
+        }
+
+        model.addAttribute("purchaseOrders", purchaseOrders);
+        return "admin";
+    }
+
+
 
 }
