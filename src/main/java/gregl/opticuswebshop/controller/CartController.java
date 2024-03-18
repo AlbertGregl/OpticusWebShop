@@ -2,10 +2,12 @@ package gregl.opticuswebshop.controller;
 
 import gregl.opticuswebshop.DTO.model.*;
 import gregl.opticuswebshop.service.EyewearService;
+import gregl.opticuswebshop.service.PayPalService;
 import gregl.opticuswebshop.service.PurchaseOrderService;
 import gregl.opticuswebshop.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -28,6 +30,7 @@ public class CartController {
     private final EyewearService eyewearService;
     private final PurchaseOrderService purchaseOrderService;
     private final UserService userService;
+    private final PayPalService payPalService;
 
     @GetMapping("/getCart.html")
     public String showCart(Model model, HttpSession session) {
@@ -74,48 +77,6 @@ public class CartController {
         int newCartItemCount = calculateCartItemCount(cart);
         return ResponseEntity.ok(Map.of("success", true, "cartItemCount", newCartItemCount));
     }
-
-
-    @PostMapping("/completePurchase.html")
-    public String completePurchase(HttpSession session, @RequestParam("paymentMethod") String paymentMethodStr, Authentication authentication, Model model) {
-        List<CartItems> cart = (List<CartItems>) session.getAttribute("cart");
-        if (cart == null || cart.isEmpty() || authentication == null) {
-            model.addAttribute("orderError", "There was an error with your order. Please try again.");
-            return "getCart";
-        }
-
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userService.findUserByUsername(userDetails.getUsername());
-        if (user == null) {
-            model.addAttribute("orderError", "User not found. Please log in again.");
-            return "getCart";
-        }
-
-        PurchaseOrder order = new PurchaseOrder();
-        order.setUser(user);
-        order.setPurchaseDate(LocalDateTime.now());
-        order.setPaymentMethod(PaymentMethod.valueOf(paymentMethodStr.toUpperCase()));
-
-        for (CartItems item : cart) {
-            item.setPurchaseOrder(order);
-        }
-        order.setItems(cart);
-
-        purchaseOrderService.savePurchaseOrder(order);
-
-        for (CartItems item : cart) {
-            Eyewear eyewear = item.getEyewear();
-            eyewear.setStockQuantity(eyewear.getStockQuantity() - item.getQuantity());
-            eyewearService.saveEyewear(eyewear);
-        }
-
-        session.removeAttribute("cart");
-
-        model.addAttribute("orderSuccess", "Thank you for your purchase! Your order number is " + order.getOrderId() + ".");
-        model.addAttribute("cart", new ArrayList<CartItems>()); // Empty the cart in the view
-        return "getCart";
-    }
-
 
 
     @PostMapping("/remove-from-cart/{itemIndex}")
@@ -168,6 +129,99 @@ public class CartController {
 
     private int calculateCartItemCount(List<CartItems> cart) {
         return cart.stream().mapToInt(CartItems::getQuantity).sum();
+    }
+
+
+    @PostMapping("/completePurchase.html")
+    public String completePurchase(
+            HttpSession session,
+            @RequestParam("paymentMethod") String paymentMethodStr,
+            Authentication authentication,
+            Model model) {
+
+
+        List<CartItems> cart = (List<CartItems>) session.getAttribute("cart");
+        if (cart == null || cart.isEmpty() || authentication == null) {
+            model.addAttribute("orderError", "There was an error with your order. Please try again.");
+            return "getCart";
+        }
+
+        if ("PAYPAL".equalsIgnoreCase(paymentMethodStr)) {
+            double total = cart.stream().mapToDouble(item -> item.getQuantity() * item.getEyewear().getPrice()).sum();
+            String payPalOrderUrl = payPalService.createOrder(total, "USD");
+
+            return "redirect:" + payPalOrderUrl;
+        }
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userService.findUserByUsername(userDetails.getUsername());
+        if (user == null) {
+            model.addAttribute("orderError", "User not found. Please log in again.");
+            return "getCart";
+        }
+
+        PurchaseOrder order = createOrderSkeleton(user, paymentMethodStr);
+
+        finalizeOrder(order, cart);
+        session.removeAttribute("cart");
+        model.addAttribute("orderSuccess", "Thank you for your purchase! Your order number is " + order.getOrderId() + ".");
+        model.addAttribute("cart", new ArrayList<CartItems>());
+        return "getCart";
+    }
+
+    @GetMapping("/processPaypalOrder")
+    public String processPaypalOrder(
+            @RequestParam("token") String orderId,
+            HttpSession session,
+            Model model,
+            Authentication authentication) {
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userService.findUserByUsername(userDetails.getUsername());
+        if (user == null) {
+            model.addAttribute("orderError", "User not found. Please log in again.");
+            return "getCart";
+        }
+
+        List<CartItems> cart = (List<CartItems>) session.getAttribute("cart");
+
+        PurchaseOrder order = createOrderSkeleton(user, "PAYPAL");
+
+        finalizeOrder(order, cart);
+        session.removeAttribute("cart");
+        model.addAttribute("orderSuccess", "Thank you for your purchase! Your order number is " + orderId + ".");
+
+        return "getCart";
+    }
+
+    @GetMapping("/cancelPaypalOrder")
+    public String cancelPaypalOrder() {
+        return "getCart";
+    }
+
+    private PurchaseOrder createOrderSkeleton(User user, String paymentMethodStr) {
+        PurchaseOrder order = new PurchaseOrder();
+        order.setUser(user);
+        order.setPurchaseDate(LocalDateTime.now());
+        order.setPaymentMethod(PaymentMethod.valueOf(paymentMethodStr.toUpperCase()));
+        return order;
+    }
+
+    private void finalizeOrder(PurchaseOrder order, List<CartItems> cart) {
+        for (CartItems item : cart) {
+            item.setPurchaseOrder(order);
+        }
+        order.setItems(cart);
+        purchaseOrderService.savePurchaseOrder(order);
+        updateStockQuantities(cart);
+    }
+
+    private void updateStockQuantities(List<CartItems> cart) {
+        for (CartItems item : cart) {
+            Eyewear eyewear = item.getEyewear();
+            eyewear.setStockQuantity(eyewear.getStockQuantity() - item.getQuantity());
+            eyewearService.saveEyewear(eyewear);
+        }
     }
 
 }
