@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
-public class AuthenticationSuccessListener implements ApplicationListener<AuthenticationSuccessEvent> {
+    public class AuthenticationSuccessListener implements ApplicationListener<AuthenticationSuccessEvent> {
 
     private final LoginHistoryService loginHistoryService;
     private final HttpServletRequest request;

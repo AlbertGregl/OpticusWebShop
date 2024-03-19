@@ -2,6 +2,7 @@ package gregl.opticuswebshop.configuration;
 
 import gregl.opticuswebshop.DTO.model.User;
 import gregl.opticuswebshop.service.UserService;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -84,6 +85,19 @@ public class WebSecurityConfig {
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
+    }
+
+
+    @Bean
+    public FilterRegistrationBean<RequestResponseLoggingFilter> loggingFilter(){
+        FilterRegistrationBean<RequestResponseLoggingFilter> registrationBean
+                = new FilterRegistrationBean<>();
+
+        registrationBean.setFilter(new RequestResponseLoggingFilter());
+        registrationBean.addUrlPatterns("/", "/admin.html", "/cart/*");
+        registrationBean.setOrder(1);
+
+        return registrationBean;
     }
 
 
