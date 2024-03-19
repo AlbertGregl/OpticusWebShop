@@ -176,6 +176,8 @@ public class CartController {
             Model model,
             Authentication authentication) {
 
+        payPalService.captureOrder(orderId);
+
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = userService.findUserByUsername(userDetails.getUsername());
         if (user == null) {

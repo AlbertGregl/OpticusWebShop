@@ -99,6 +99,29 @@ public class PayPalServiceImpl implements PayPalService {
         }
     }
 
+    @Override
+    public Void captureOrder(String orderId) {
+        String accessToken = getAccessToken();
+
+        HttpHeaders headers = createBasicAuthHeaders(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(accessToken);
+
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                apiBaseUrl + "/v2/checkout/orders/" + orderId + "/capture",
+                HttpMethod.POST,
+                entity,
+                String.class
+        );
+
+        if (response.getStatusCode() != HttpStatus.CREATED) {
+            throw new RuntimeException("Failed to capture order in PayPal. Response: " + response.getBody());
+        }
+
+        return null;
+    }
+
     private ObjectNode createOrderPayload(Double total, String currency, String returnUrl, String cancelUrl) {
         ObjectNode payload = objectMapper.createObjectNode();
         payload.put("intent", "CAPTURE");
@@ -126,4 +149,6 @@ public class PayPalServiceImpl implements PayPalService {
         }
         return headers;
     }
+
+
 }
