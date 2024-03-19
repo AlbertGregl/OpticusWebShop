@@ -2,7 +2,8 @@ package gregl.opticuswebshop.DTO.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -40,4 +41,8 @@ public class Eyewear {
 
     @Column(name = "image_path")
     private String imagePath;
+
+    @OneToMany(mappedBy = "eyewear", cascade = CascadeType.ALL)
+    private List<CartItems> cartItems;
+
 }
