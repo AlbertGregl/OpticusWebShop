@@ -57,7 +57,7 @@
                                class="form-control quantity-input"/>
                     </label>
                 </td>
-                <td th:text="${item.quantity * item.eyewear.price}" th:id="'total-' + ${stat.index}">Total Price</td>
+                <td th:text="${item.quantity * item.eyewear.price}" th:id="'total-' + ${stat.index}">Total Price <span>USD</span></td>
                 <td>
                     <button th:onclick="'updateQuantity(' + ${stat.index} + ', ' + ${item.eyewear.eyewearId} + ')' "
                             class="btn btn-info">Update
@@ -70,7 +70,7 @@
             </tbody>
         </table>
         <div class="text-end">
-            <h3>Total: <span th:text="${total}">Total</span></h3>
+            <h3>Total: <span th:text="${total}">Total</span> <span>USD</span></h3>
             <div sec:authorize="isAuthenticated()">
                 <form action="/cart/completePurchase.html" method="post">
                     <div class="payment-method">

@@ -273,7 +273,7 @@
                                  th:alt="${eyewear.name}">
                         </a>
                         <div class="text-start">
-                            <h5 class="card-title" th:text="${eyewear.price}"></h5>
+                            <h5 class="card-title"><span th:text="${eyewear.price}">price</span> <span>USD</span></h5>
                             <p class="card-text mb-0" th:text="${eyewear.name}"></p>
                             <p class="text-muted" th:text="${eyewear.description}"></p>
                         </div>
